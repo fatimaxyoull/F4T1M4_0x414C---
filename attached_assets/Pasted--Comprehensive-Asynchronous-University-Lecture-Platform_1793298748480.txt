@@ -1,0 +1,44 @@
+# Comprehensive Asynchronous University Lecture Platform Prompt
+
+## Goal
+Build a modern, secure, and interactive single-page web application (SPA) designed for universities and custom courses to deliver asynchronous video lectures, track student attendance via quiz submissions, and provide a full-fledged Admin Dashboard for instructors to manage content and view student records.
+
+## Tech Stack
+- Pure HTML5, Modern CSS (Tailwind CDN / Custom CSS Glassmorphism style), Modern Vanilla JavaScript (ES6+).
+- Client-side storage: LocalStorage (with architecture adaptable for Firebase/Supabase backend integration).
+
+## Core Requirements & Features
+
+### 1. General & Branding
+- **Theme:** Dark Mode, Neon Purple/Violet university aesthetic `#8b5cf6` with smooth glassmorphism UI elements.
+- **Footer Signature:** Must strictly feature the styled custom watermark in the center:
+  `F4T1M4_0x414C🕷️`
+  With subtext: "Engineered & Designed by F4T1M4_0x414C 🕷️ | All Rights Reserved"
+
+### 2. Role Security & Navigation
+- Top navigation with a toggle between **Student View** and **Admin Dashboard**.
+- Admin area must be protected with a Security PIN/Password modal (default example: `1234`) to prevent students from accessing admin privileges.
+
+### 3. Admin Dashboard Features (Full Management Control)
+- **Course & Instructor Customization:** Inputs to dynamically change Course Name, Course Code, and Professor/Doctor Name.
+- **Lecture Creator:** Form to add new lectures (Title, Description, Video URL/MP4 link, and dynamically added Multiple Choice Questions with options and correct answers).
+- **Student Roster & Attendance Archive Table:** Real-time table displaying:
+  - Student Full Name
+  - Lecture Watched & Completed
+  - Quiz Score & Date/Time Stamp
+  - Search/Filter bar to search through student attendance records.
+  - Option to clear or reset test logs.
+
+### 4. Student View Features
+- **Student Identification:** Prompts student to enter their full name prior to starting/submitting to tie their attendance record officially.
+- **Lecture Sidebar & Progress:** Lists all available lectures with status indicators (`Completed`, `In Progress`).
+- **Interactive Video Player:** Embedded HTML5 video player with customized controls. Optionally restrict seeking past unwatched portions to ensure real attendance.
+- **In-Lecture Interactive Quiz:** Dynamically loaded multiple-choice quiz based on the selected lecture. On submit:
+  - Validates answers instantly.
+  - Updates student score.
+  - Automatically records timestamped attendance entry in the database/localStorage.
+
+### 5. Data Persistence
+- All dynamically created lectures, custom course names, and attendance records must persist across browser refreshes via `localStorage`.
+
+---

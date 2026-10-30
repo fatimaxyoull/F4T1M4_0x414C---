@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة المحاضرات الجامعية غير المتزامنة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0b0d14;
+            color: #f3f4f6;
+        }
+        .bg-glass {
+            background: rgba(18, 20, 32, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+        }
+        .border-purple-glow {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+        }
+        .footer-signature {
+            background: linear-gradient(180deg, rgba(11, 13, 20, 0) 0%, rgba(17, 14, 29, 0.9) 100%);
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-purple-600 selection:text-white">
+
+    <!-- Navbar -->
+    <header class="bg-glass sticky top-0 z-40 px-6 py-4 border-b border-purple-900/30 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-purple-500/30">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div>
+                <h1 id="nav-course-title" class="font-black text-lg md:text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-purple-200 to-indigo-300">اسم المادة الجامعية</h1>
+                <p id="nav-instructor" class="text-xs text-purple-300/70">م. د. اسم الدكتور / المحاضر</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div id="role-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-950/60 text-purple-300 border border-purple-800/40">
+                <i class="fa-solid fa-user-graduate ml-1"></i> واجهة الطالب
+            </div>
+            <button onclick="toggleView()" class="px-4 py-2 rounded-xl text-sm font-bold bg-purple-600 hover:bg-purple-500 transition-all text-white shadow-md shadow-purple-900/40 flex items-center gap-2">
+                <i class="fa-solid fa-sliders"></i> <span id="view-toggle-btn-text">لوحة الأدمن</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container mx-auto px-4 py-6 flex-grow">
+
+        <!-- Student View -->
+        <div id="student-view" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-8 flex flex-col gap-6">
+                <!-- Video Card -->
+                <div class="bg-glass rounded-2xl p-4 md:p-6 border-purple-glow">
+                    <div class="relative rounded-xl overflow-hidden bg-black aspect-video mb-4 shadow-2xl">
+                        <video id="main-video" class="w-full h-full object-contain" controls>
+                            <source id="video-source" src="" type="video/mp4">
+                            متصفحك لا يدعم تشغيل الفيديو.
+                        </video>
+                    </div>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <div>
+                            <span id="lecture-code" class="text-xs px-2.5 py-1 rounded-md bg-purple-900/40 text-purple-300 font-mono">Lec 01</span>
+                            <h2 id="lecture-title" class="text-xl font-bold mt-1 text-white">اختر محاضرة للعرض</h2>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="attendance-status" class="text-xs px-3 py-1.5 rounded-lg bg-gray-800 text-gray-400 font-semibold border border-gray-700">
+                                غير مكتمل
+                            </span>
+                        </div>
+                    </div>
+                    <p id="lecture-desc" class="text-sm text-gray-400 mt-3 border-t border-purple-900/20 pt-3">طبيعة المحاضرة والتفاصيل ستظهر هنا عند اختيار المحاضرة.</p>
+                </div>
+
+                <!-- Quiz Card -->
+                <div class="bg-glass rounded-2xl p-6 border-purple-glow">
+                    <div class="flex items-center justify-between border-b border-purple-900/30 pb-4 mb-4">
+                        <h3 class="text-lg font-bold text-purple-200 flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-question text-purple-400"></i> كويز وإثبات حضور المحاضرة
+                        </h3>
+                        <span class="text-xs text-purple-400">إلزامية التسجيل لتسجيل الحضور</span>
+                    </div>
+
+                    <div class="mb-6 bg-purple-950/30 p-4 rounded-xl border border-purple-800/30">
+                        <label class="block text-xs font-bold text-purple-300 mb-1">اسم الطالب الرباعي (لتأكيد الحضور):</label>
+                        <input type="text" id="student-name-input" placeholder="اكتب اسمك الكامل هنا..." class="w-full bg-slate-900 border border-purple-800/50 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500 text-white">
+                    </div>
+
+                    <form id="quiz-form" onsubmit="handleQuizSubmit(event)" class="space-y-6">
+                        <div id="quiz-questions-container" class="space-y-6"></div>
+                        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 font-bold text-white shadow-lg shadow-purple-900/50 transition-all flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> إرسال الكويز وتأكيد الحضور
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-4">
+                <div class="bg-glass rounded-2xl p-4 border-purple-glow sticky top-24">
+                    <h3 class="font-bold text-lg text-white mb-4 flex items-center gap-2 px-2">
+                        <i class="fa-solid fa-list-ul text-purple-400"></i> قائمة المحاضرات
+                    </h3>
+                    <div id="lectures-list" class="space-y-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin View -->
+        <div id="admin-view" class="hidden space-y-8">
+            <!-- Settings & Server Connection -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-glass rounded-2xl p-6 border-purple-glow">
+                    <h3 class="text-lg font-bold text-purple-300 mb-4 border-b border-purple-900/30 pb-3">إعدادات المادة والدكتور</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-purple-200 mb-1">اسم المادة الدراسية:</label>
+                            <input type="text" id="admin-course-input" class="w-full bg-slate-900 border border-purple-800/50 rounded-lg px-4 py-2 text-sm text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-purple-200 mb-1">اسم المحاضر / الدكتور:</label>
+                            <input type="text" id="admin-instructor-input" class="w-full bg-slate-900 border border-purple-800/50 rounded-lg px-4 py-2 text-sm text-white">
+                        </div>
+                        <button onclick="saveCourseSettings()" class="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-sm font-bold text-white transition-all">حفظ التغييرات</button>
+                    </div>
+                </div>
+
+                <div class="bg-glass rounded-2xl p-6 border-purple-glow">
+                    <h3 class="text-lg font-bold text-purple-300 mb-4 border-b border-purple-900/30 pb-3">أمان الأدمن وربط السيرفر</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-purple-200 mb-1">تغيير كلمة مرور الأدمن:</label>
+                            <input type="text" id="admin-pass-input" class="w-full bg-slate-900 border border-purple-800/50 rounded-lg px-4 py-2 text-sm text-white font-mono" placeholder="416c6b75667261696e">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-purple-200 mb-1">رابط ربط السيرفر الخارجي (API / Database Endpoint):</label>
+                            <input type="url" id="server-api-input" class="w-full bg-slate-900 border border-purple-800/50 rounded-lg px-4 py-2 text-sm text-white" placeholder="https://api.yourserver.com/v1">
+                        </div>
+                        <button onclick="saveAdminSecuritySettings()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-bold text-white transition-all">حفظ بيانات الأمان والسيرفر</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Lecture -->
+            <div class="bg-glass rounded-2xl p-6 border-purple-glow">
+                <h3 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-900/30 pb-3">إضافة محاضرة كويز جديد</h3>
+                <form onsubmit="handleAddLecture(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-purple-200 mb-1">عنوان المحاضرة:</label>
+                            <input type="text" id="new-lec-title" required class="w-full bg-slate-900 border border-purple-800/50 rounded-lg px-4 py-2 text-sm text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-purple-200 mb-1">رابط الفيديو (MP4 / Web URL):</label>
+                            <input type="url" id="new-lec-url" required class="w-full bg-slate-900 border border-purple-800/50 rounded-lg px-4 py-2 text-sm text-white" placeholder="https://domain.com/video.mp4">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-purple-200 mb-1">وصف المحاضرة:</label>
+                        <textarea id="new-lec-desc" rows="2" class="w-full bg-slate-900 border border-purple-800/50 rounded-lg px-4 py-2 text-sm text-white"></textarea>
+                    </div>
+
+                    <div class="border border-purple-900/40 p-4 rounded-xl bg-purple-950/20">
+                        <h4 class="font-bold text-sm text-purple-300 mb-2">إضافة سؤال الكويز للمحاضرة:</h4>
+                        <input type="text" id="new-q-text" placeholder="نص السؤال..." required class="w-full bg-slate-900 border border-purple-800/50 rounded-lg px-4 py-2 text-sm text-white mb-3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-3">
+                            <input type="text" id="new-opt-0" placeholder="الخيار الأول" required class="bg-slate-900 border border-purple-800/50 rounded-lg px-3 py-1.5 text-xs text-white">
+                            <input type="text" id="new-opt-1" placeholder="الخيار الثاني" required class="bg-slate-900 border border-purple-800/50 rounded-lg px-3 py-1.5 text-xs text-white">
+                            <input type="text" id="new-opt-2" placeholder="الخيار الثالث" required class="bg-slate-900 border border-purple-800/50 rounded-lg px-3 py-1.5 text-xs text-white">
+                            <input type="text" id="new-opt-3" placeholder="الخيار الرابع" required class="bg-slate-900 border border-purple-800/50 rounded-lg px-3 py-1.5 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-purple-200 mb-1">رقم الخيار الصحيح (0 إلى 3):</label>
+                            <input type="number" id="new-correct-opt" min="0" max="3" value="0" required class="w-24 bg-slate-900 border border-purple-800/50 rounded-lg px-3 py-1 text-xs text-white">
+                        </div>
+                    </div>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 font-bold text-sm text-white shadow-md">نشر المحاضرة</button>
+                </form>
+            </div>
+
+            <!-- Attendance Records & Export File -->
+            <div class="bg-glass rounded-2xl p-6 border-purple-glow">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 border-b border-purple-900/30 pb-3">
+                    <div>
+                        <h3 class="text-xl font-bold text-purple-300">سجل حضور وتسليمات الطلاب</h3>
+                        <p class="text-xs text-gray-400 mt-0.5">يمكنك تصدير كشف الحضور والغياب لملف Excel أو استيراد ملفات.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="px-4 py-2 rounded-xl bg-purple-950 border border-purple-700/60 hover:bg-purple-900 text-xs font-bold text-purple-200 cursor-pointer flex items-center gap-2 transition-all">
+                            <i class="fa-solid fa-file-arrow-up"></i> إرفاق سجل خارجي
+                            <input type="file" id="import-file-input" onchange="importAttendanceFile(event)" class="hidden" accept=".csv, .json">
+                        </label>
+                        <button onclick="exportAttendanceCSV()" class="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-xs font-bold text-white flex items-center gap-2 transition-all">
+                            <i class="fa-solid fa-file-excel"></i> تصدير كشف الحضور (CSV)
+                        </button>
+                        <button onclick="clearRecords()" class="px-3 py-2 rounded-xl bg-red-950/60 text-red-400 hover:bg-red-900 text-xs border border-red-800/50">مسح الكل</button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-purple-950/60 text-purple-200 text-xs uppercase">
+                            <tr>
+                                <th class="p-3 rounded-r-lg">اسم الطالب</th>
+                                <th class="p-3">المحاضرة</th>
+                                <th class="p-3">علامة الكويز</th>
+                                <th class="p-3">تاريخ ووقت الحضور</th>
+                                <th class="p-3 rounded-l-lg">الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-table-body" class="divide-y divide-purple-900/20"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer Signature -->
+    <footer class="footer-signature py-6 px-4 mt-12 text-center relative z-30">
+        <div class="container mx-auto">
+            <div class="inline-block text-purple-400 font-mono font-bold text-lg md:text-xl tracking-wider hover:scale-105 transition-transform duration-300">
+                F4T1M4_0x414C🕷️
+            </div>
+            <p class="text-xs text-purple-300/50 mt-1 font-sans">
+                Engineered & Designed by F4T1M4_0x414C 🕷️ | All Rights Reserved
+            </p>
+        </div>
+    </footer>
+
+    <!-- Script Engine -->
+    <script>
+        let currentRole = 'student';
+        let currentLectureIndex = 0;
+
+        let appState = JSON.parse(localStorage.getItem('uni_platform_data')) || {
+            courseTitle: "تفاضل وتكامل ومفاهيم رياضية",
+            instructorName: "أ.د. محمد أحمد",
+            adminPassword: "416c6b75667261696e",
+            serverApiUrl: "",
+            lectures: [
+                {
+                    title: "المحاضرة 1: مقدمة في النظم والمتغيرات",
+                    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                    desc: "نظرة عامة على متطلبات المادة وكيفية تحصيل الحضور والساعات غير المتزامنة.",
+                    questions: [
+                        {
+                            q: "ما هو الشرط الأساسي لاحتساب الحضور في هذه المنصة؟",
+                            options: ["مشاهدة الفيديو فقط", "حل الكويز وتسليم الاسم", "فتح الرابط وإغلاقه", "لا يوجد شرط"],
+                            correct: 1
+                        }
+                    ]
+                }
+            ],
+            attendanceLogs: []
+        };
+
+        function saveData() {
+            localStorage.setItem('uni_platform_data', JSON.stringify(appState));
+        }
+
+        function initApp() {
+            document.getElementById('nav-course-title').innerText = appState.courseTitle;
+            document.getElementById('nav-instructor').innerText = appState.instructorName;
+            document.getElementById('admin-course-input').value = appState.courseTitle;
+            document.getElementById('admin-instructor-input').value = appState.instructorName;
+            document.getElementById('admin-pass-input').value = appState.adminPassword || "416c6b75667261696e";
+            document.getElementById('server-api-input').value = appState.serverApiUrl || "";
+            renderLecturesList();
+            loadLecture(currentLectureIndex);
+            renderAttendanceTable();
+        }
+
+        function toggleView() {
+            if (currentRole === 'student') {
+                const currentPass = appState.adminPassword || "416c6b75667261696e";
+                const pin = prompt("أدخل كلمة مرور الأدمن:");
+                if (pin === currentPass) {
+                    currentRole = 'admin';
+                    document.getElementById('student-view').classList.add('hidden');
+                    document.getElementById('admin-view').classList.remove('hidden');
+                    document.getElementById('view-toggle-btn-text').innerText = "واجهة الطالب";
+                    document.getElementById('role-badge').innerHTML = '<i class="fa-solid fa-user-shield ml-1"></i> لوحة الأدمن';
+                } else if(pin !== null) {
+                    alert("كلمة المرور خاطئة!");
+                }
+            } else {
+                currentRole = 'student';
+                document.getElementById('admin-view').classList.add('hidden');
+                document.getElementById('student-view').classList.remove('hidden');
+                document.getElementById('view-toggle-btn-text').innerText = "لوحة الأدمن";
+                document.getElementById('role-badge').innerHTML = '<i class="fa-solid fa-user-graduate ml-1"></i> واجهة الطالب';
+            }
+        }
+
+        function renderLecturesList() {
+            const listEl = document.getElementById('lectures-list');
+            listEl.innerHTML = '';
+            appState.lectures.forEach((lec, idx) => {
+                const item = document.createElement('div');
+                item.className = `p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${idx === currentLectureIndex ? 'bg-purple-900/40 border-purple-500 text-white shadow-md' : 'bg-purple-950/20 border-purple-900/30 text-gray-400 hover:border-purple-700'}`;
+                item.onclick = () => loadLecture(idx);
+                item.innerHTML = `
+                    <div class="flex items-center gap-3 truncate">
+                        <i class="fa-regular fa-circle-play text-purple-400"></i>
+                        <span class="text-sm font-semibold truncate">${lec.title}</span>
+                    </div>
+                `;
+                listEl.appendChild(item);
+            });
+        }
+
+        function loadLecture(index) {
+            currentLectureIndex = index;
+            const lec = appState.lectures[index];
+            if(!lec) return;
+
+            document.getElementById('lecture-code').innerText = `Lec ${index + 1}`;
+            document.getElementById('lecture-title').innerText = lec.title;
+            document.getElementById('lecture-desc').innerText = lec.desc;
+            
+            const video = document.getElementById('main-video');
+            document.getElementById('video-source').src = lec.url;
+            video.load();
+
+            renderQuiz(lec.questions);
+            renderLecturesList();
+        }
+
+        function renderQuiz(questions) {
+            const container = document.getElementById('quiz-questions-container');
+            container.innerHTML = '';
+            if(!questions || questions.length === 0) {
+                container.innerHTML = '<p class="text-xs text-gray-400">لا يوجد كويز مضاف لهذه المحاضرة.</p>';
+                return;
+            }
+            questions.forEach((qObj, qIdx) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'space-y-3';
+                let optionsHtml = '';
+                qObj.options.forEach((opt, oIdx) => {
+                    optionsHtml += `
+                        <label class="flex items-center gap-3 p-3 rounded-lg bg-slate-900/80 border border-purple-900/30 hover:border-purple-600 cursor-pointer text-sm text-gray-200">
+                            <input type="radio" name="q_${qIdx}" value="${oIdx}" required class="accent-purple-500">
+                            <span>${opt}</span>
+                        </label>
+                    `;
+                });
+                qDiv.innerHTML = `
+                    <p class="font-bold text-sm text-purple-200">${qIdx + 1}. ${qObj.q}</p>
+                    <div class="space-y-2">${optionsHtml}</div>
+                `;
+                container.appendChild(qDiv);
+            });
+        }
+
+        function handleQuizSubmit(e) {
+            e.preventDefault();
+            const studentName = document.getElementById('student-name-input').value.trim();
+            if(!studentName) {
+                alert("يرجى إدخال اسمك الكامل أولاً لتسجيل الحضور!");
+                return;
+            }
+
+            const currentLec = appState.lectures[currentLectureIndex];
+            let score = 0;
+            currentLec.questions.forEach((qObj, qIdx) => {
+                const selected = document.querySelector(`input[name="q_${qIdx}"]:checked`);
+                if(selected && parseInt(selected.value) === qObj.correct) {
+                    score++;
+                }
+            });
+
+            const totalQ = currentLec.questions.length;
+            const logEntry = {
+                studentName: studentName,
+                lectureTitle: currentLec.title,
+                score: `${score}/${totalQ}`,
+                timestamp: new Date().toLocaleString('ar-JO')
+            };
+
+            appState.attendanceLogs.unshift(logEntry);
+            saveData();
+            renderAttendanceTable();
+
+            // إذا تم ربط سيرفر، يمكن إرسال البيانات هنا عبر fetch(appState.serverApiUrl, { method: 'POST', body: JSON.stringify(logEntry) })
+
+            document.getElementById('attendance-status').className = 'text-xs px-3 py-1.5 rounded-lg bg-emerald-950 text-emerald-300 font-semibold border border-emerald-800';
+            document.getElementById('attendance-status').innerText = 'تم الحضور بنجاح';
+
+            alert(`تم تسجيل حضورك بنجاح يا ${studentName}!\nعلامة الكويز: ${score}/${totalQ}`);
+        }
+
+        function saveCourseSettings() {
+            appState.courseTitle = document.getElementById('admin-course-input').value;
+            appState.instructorName = document.getElementById('admin-instructor-input').value;
+            saveData();
+            initApp();
+            alert("تم حفظ إعدادات المادة والدكتور بنجاح!");
+        }
+
+        function saveAdminSecuritySettings() {
+            const newPass = document.getElementById('admin-pass-input').value.trim();
+            const newServerUrl = document.getElementById('server-api-input').value.trim();
+            if(newPass) {
+                appState.adminPassword = newPass;
+            }
+            appState.serverApiUrl = newServerUrl;
+            saveData();
+            alert("تم تحديث كلمة مرور الأدمن وإعدادات السيرفر بنجاح!");
+        }
+
+        function handleAddLecture(e) {
+            e.preventDefault();
+            const title = document.getElementById('new-lec-title').value;
+            const url = document.getElementById('new-lec-url').value;
+            const desc = document.getElementById('new-lec-desc').value;
+            
+            const qText = document.getElementById('new-q-text').value;
+            const opts = [
+                document.getElementById('new-opt-0').value,
+                document.getElementById('new-opt-1').value,
+                document.getElementById('new-opt-2').value,
+                document.getElementById('new-opt-3').value
+            ];
+            const correctOpt = parseInt(document.getElementById('new-correct-opt').value);
+
+            appState.lectures.push({
+                title: title,
+                url: url,
+                desc: desc,
+                questions: [{ q: qText, options: opts, correct: correctOpt }]
+            });
+
+            saveData();
+            initApp();
+            alert("تم إدراج المحاضرة والكويز بنجاح!");
+        }
+
+        function renderAttendanceTable() {
+            const tbody = document.getElementById('attendance-table-body');
+            tbody.innerHTML = '';
+            if(appState.attendanceLogs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center p-4 text-xs text-gray-500">لا يوجد سجلات حضور حتى الآن.</td></tr>';
+                return;
+            }
+
+            appState.attendanceLogs.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-purple-950/30';
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-white">${log.studentName}</td>
+                    <td class="p-3 text-purple-300">${log.lectureTitle}</td>
+                    <td class="p-3 font-mono text-purple-400 font-bold">${log.score}</td>
+                    <td class="p-3 text-xs text-gray-400">${log.timestamp}</td>
+                    <td class="p-3"><span class="px-2 py-1 rounded bg-emerald-950 text-emerald-400 text-xs border border-emerald-800">مكتمل</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function exportAttendanceCSV() {
+            if(appState.attendanceLogs.length === 0) {
+                alert("لا توجد سجلات لتصديرها.");
+                return;
+            }
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFFاسم الطالب,المحاضرة,العلامة,التاريخ\n";
+            appState.attendanceLogs.forEach(log => {
+                csvContent += `"${log.studentName}","${log.lectureTitle}","${log.score}","${log.timestamp}"\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "attendance_records.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function importAttendanceFile(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    // دعم قراءة ملفات JSON كإستراد سجلات
+                    const importedLogs = JSON.parse(content);
+                    if(Array.isArray(importedLogs)) {
+                        appState.attendanceLogs = importedLogs.concat(appState.attendanceLogs);
+                        saveData();
+                        renderAttendanceTable();
+                        alert("تم إرفاق واستيراد السجلات بنجاح!");
+                    } else {
+                        alert("تنسيق الملف غير صحيح.");
+                    }
+                } catch(err) {
+                    alert("حدث خطأ أثناء قراءة الملف المرفق. يجدر أن يكون الملف بصيغة JSON أو CSV متوافق.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearRecords() {
+            if(confirm("هل أنت تأكد من مسح كافة سجلات الحضور؟")) {
+                appState.attendanceLogs = [];
+                saveData();
+                renderAttendanceTable();
+            }
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>

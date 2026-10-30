@@ -1,0 +1,1 @@
+- [Vite dependency cache](react-vite-deps-cache.md) — after React upgrades, stale optimized dependencies can keep old package versions; inspect the cache and restart.
